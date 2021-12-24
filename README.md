@@ -305,6 +305,38 @@ aws ssm delete-parameter --name JWT_SECRET
 ```
 
 
+## Test API Endpoints
+
+Get the external IP for your service:
+```
+kubectl get services simple-jwt-api -o wide
+```
+
+Use the external IP url to test the app:
+```
+export TOKEN=`curl -d '{"email":"<EMAIL>","password":"<PASSWORD>"}' -H "Content-Type: application/json" -X POST <EXTERNAL-IP URL>/auth  | jq -r '.token'`
+curl --request GET '<EXTERNAL-IP URL>/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
+```
+
+For example, with an external IP `a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com`:
+```
+export TOKEN=`curl -d '{"email":"abc@xyz.com","password":"mypwd"}' -H "Content-Type: application/json" -X POST a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/auth  | jq -r '.token'`
+curl --request GET 'a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
+```
+
+You will see an output similar to this:
+```
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    58  100    58    0     0   3411      0 --:--:-- --:--:-- --:--:--  3411
+{
+  "email": "abc@xyz.com",
+  "exp": 1641549483,
+  "nbf": 1640339883
+}
+```
+
+
 ## Resolve the "error: You must be logged in to the server (Unauthorized)"
 
 https://aws.amazon.com/premiumsupport/knowledge-center/eks-api-server-unauthorized-error/
@@ -369,23 +401,4 @@ If encounter error: You must be logged in to the server (Unauthorized)
 aws --version
 
 aws eks --region ap-southeast-1 update-kubeconfig --name simple-jwt-api
-```
-
-## Test API Endpoints
-
-Get the external IP for your service:
-```
-kubectl get services simple-jwt-api -o wide
-```
-
-Use the external IP url to test the app:
-```
-export TOKEN=`curl -d '{"email":"<EMAIL>","password":"<PASSWORD>"}' -H "Content-Type: application/json" -X POST <EXTERNAL-IP URL>/auth  | jq -r '.token'`
-curl --request GET '<EXTERNAL-IP URL>/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
-```
-
-For example, with an external IP `a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com`:
-```
-export TOKEN=`curl -d '{"email":"abc@xyz.com","password":"mypwd"}' -H "Content-Type: application/json" -X POST a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/auth  | jq -r '.token'`
-curl --request GET 'a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
 ```
