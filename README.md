@@ -305,6 +305,72 @@ aws ssm delete-parameter --name JWT_SECRET
 ```
 
 
+## Resolve the "error: You must be logged in to the server (Unauthorized)"
+
+https://aws.amazon.com/premiumsupport/knowledge-center/eks-api-server-unauthorized-error/
+
+To see the configuration of your AWS CLI user or role, run the following command:
+```
+aws sts get-caller-identity
+```
+
+The output returns the Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) user or role. For example:
+```
+{
+    "UserId": "XXXXXXXXXXXXXXXXXXXXX",
+    "Account": "XXXXXXXXXXXX",
+    "Arn": "arn:aws:iam::XXXXXXXXXXXX:user/testuser"
+}
+```
+
+Confirm that the ARN matches the cluster creator.
+
+Update or generate the kubeconfig file using one of the following commands.
+
+As the IAM user, run the following command:
+```
+$ aws eks update-kubeconfig --name eks-cluster-name --region aws-region
+```
+
+Note: Replace eks-cluster-name with your cluster name. Replace aws-region with your AWS Region.
+```
+$ aws eks update-kubeconfig --name simple-jwt-api --region ap-southeast-1
+```
+
+As the IAM role, run the following command:
+```
+$ aws eks update-kubeconfig --name eks-cluster-name --region aws-region --role-arn arn:aws:iam::XXXXXXXXXXXX:role/testrole
+```
+
+Note: Replace eks-cluster-name with your cluster name. Replace aws-region with your AWS Region.
+```
+$ aws eks update-kubeconfig --name simple-jwt-api --region ap-southeast-1 --role-arn arn:aws:iam::766155929240:role/UdacityFlaskDeployCBKubectlRole
+```
+
+To confirm that the kubeconfig file is updated, run the following command:
+```
+$ kubectl config view --minify
+```
+
+To confirm that your IAM user or role is authenticated, run the following command:
+```
+$ kubectl get svc
+```
+
+The output should be similar to the following:
+```
+NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes      ClusterIP   10.100.0.1     <none>        443/TCP   77d
+
+```
+
+If encounter error: You must be logged in to the server (Unauthorized)
+```
+aws --version
+
+aws eks --region ap-southeast-1 update-kubeconfig --name simple-jwt-api
+```
+
 ## Test API Endpoints
 
 Get the external IP for your service:
