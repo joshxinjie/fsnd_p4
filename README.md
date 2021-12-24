@@ -1,6 +1,6 @@
 # Deploying a Flask API
 
- External IP
+ External IP: a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com
 
 This is the project starter repo for the course Server Deployment, Containerization, and Testing.
 
@@ -382,4 +382,10 @@ Use the external IP url to test the app:
 ```
 export TOKEN=`curl -d '{"email":"<EMAIL>","password":"<PASSWORD>"}' -H "Content-Type: application/json" -X POST <EXTERNAL-IP URL>/auth  | jq -r '.token'`
 curl --request GET '<EXTERNAL-IP URL>/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
+```
+
+For example, with an external IP `a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com`:
+```
+export TOKEN=`curl -d '{"email":"abc@xyz.com","password":"mypwd"}' -H "Content-Type: application/json" -X POST a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/auth  | jq -r '.token'`
+curl --request GET 'a8cfef6455bac4d9b88f4f770b805796-61716847.ap-southeast-1.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
 ```
