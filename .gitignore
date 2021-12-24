@@ -128,3 +128,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+github_token.txt
+aws-auth-patch.yml
