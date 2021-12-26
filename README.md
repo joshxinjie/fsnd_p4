@@ -402,3 +402,7 @@ aws --version
 
 aws eks --region ap-southeast-1 update-kubeconfig --name simple-jwt-api
 ```
+
+## Notes
+
+https://github.com/jungleBadger/FSND-Deploy-Flask-App-to-Kubernetes-Using-EKS/blob/master/troubleshooting/deploy.md
